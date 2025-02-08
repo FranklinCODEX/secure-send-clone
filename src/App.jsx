@@ -16,8 +16,19 @@ import Img1 from "./assets/images/grid1.png"
 import Img2 from "./assets/images/grid2.png"
 import Img3 from "./assets/images/grid3.png"
 
+import { useRef } from 'react';
+import gsap from 'gsap';
+import ScrollTrigeger from 'gsap/src/ScrollTrigger'
+import { useGSAP } from '@gsap/react';
+
 
 function App() {
+
+  gsap.registerPlugin(useGSAP, ScrollTrigeger); // register the hook to avoid React version discrepancies 
+
+  const heroTitle = useRef();
+  const heroImg = useRef()
+  const cardImg = useRef()
 
   const handleFaq = (e) => {
     e.currentTarget.parentElement.parentElement.querySelector('.faq_content').classList.toggle('hidden');
@@ -26,14 +37,46 @@ function App() {
     e.currentTarget.classList.replace('fa-chevron-down', 'fa-chevron-right');
   }
 
+  useGSAP(() => {
+    gsap.from( heroTitle.current , { 
+      x: -1000,
+      duration: 1.3,
+      delay: 1
+    });
+
+    gsap.fromTo(heroImg.current, {
+      opacity: 0,
+      duration: 1.5,
+      delay: 1.7,
+      y: 300
+    }, {
+      opacity: 100,
+      duration: 1.5,
+      delay: 2,
+      y: 0
+    } );
+
+    gsap.from(cardImg.current, {
+      scale: 0,
+      delay: 1,
+      duration: 2,
+      // rotate: 360
+      stagger: 0.5,
+      scrollTrigger: {
+        trigger: cardImg.current, 
+      }
+    })
+
+}, );
+
   return (
     <>
       <Navbar />
 
       <section className=" bg-main-green text-white " >
         <div className="container mx-auto pt-14 ">
-          <div className="flex items-center flex-col gap-7 ">
-            <div className="flex flex-col gap-7 items-center" >
+          <div className="flex items-center flex-col gap-7  ">
+            <div  ref={heroTitle}className="flex flex-col gap-7 items-center" >
               <h3 className="lg:text-5xl text-3xl font-semibold text-center lg:w-[55%] w-full " >Effortless Global Payments, Secured and Streamlined</h3>
               <p className="lg:w-[50%] w-[80%] text-center " >Experience seamless, secure, and reliable payment solutions that simplify cross-border finance, allowing you to focus on what matters most.</p>
               <div className="flex lg:flex-row flex-col gap-7 mb-14 ">
@@ -46,7 +89,7 @@ function App() {
             </div>
             </div>
 
-            <img className="w-[80%] " src={dashboard} alt="" />
+            <img ref={heroImg} className="w-[80%] " src={dashboard} alt="" />
           </div>
         </div>
       </section>
@@ -118,7 +161,7 @@ function App() {
               </button>
             </div>
 
-            <img className="lg:w-[50%] w-full " src={card} alt="" />
+            <img ref={cardImg} className="lg:w-[50%] w-full " src={card} alt="" />
           </div>
         </div>
       </section>
