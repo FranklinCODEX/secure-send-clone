@@ -60,7 +60,7 @@ function App() {
       scale: 0,
       delay: 1,
       duration: 2,
-      // rotate: 360
+      rotate: 360,
       stagger: 0.5,
       scrollTrigger: {
         trigger: cardImg.current, 
